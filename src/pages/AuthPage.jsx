@@ -1,6 +1,159 @@
-import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import { ArrowUpRight, Check } from 'lucide-react'
-import FormField from '../components/FormField'
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { ArrowUpRight, Check } from "lucide-react";
+import FormField from "../components/FormField";
 
-export default function AuthPage({ mode, onAuth, defaultProfile }) { const [form, setForm] = useState({ username: '', email: '', password: '', confirm: '' }); const [attempt, setAttempt] = useState(false); const nav = useNavigate(); const signup = mode === 'signup'; const checks = [['8+ characters',form.password.length>=8],['One uppercase letter',/[A-Z]/.test(form.password)],['One number',/\d/.test(form.password)]]; const valid = signup ? form.username.trim().length>=3 && /\S+@\S+\.\S+/.test(form.email) && checks.every(c=>c[1]) && form.password===form.confirm : /\S+@\S+\.\S+/.test(form.email) && form.password.length>0; const submit=e=>{e.preventDefault();setAttempt(true);if(!valid)return;onAuth(signup?{...defaultProfile,username:form.username,email:form.email,fullName:form.username}:defaultProfile);nav('/shop')}; const field=(label, props, error)=><FormField label={label} error={error}><input {...props}/></FormField>; return <main className="auth-page"><div className="auth-art"><div><div className="eyebrow">A quieter kind of living</div><h1>Spaces that<br/>hold your story.</h1><p>Join the Teyvat circle for furniture that turns the everyday into a little ritual.</p></div><span>TEYVAT — EST. 2024</span></div><section className="auth-card"><Link className="wordmark dark" to="/">TEYVAT<span>°</span></Link><div className="auth-copy"><p className="eyebrow">{signup?'Create your account':'Welcome back'}</p><h2>{signup?'Start somewhere beautiful.':'So good to see you.'}</h2></div><form onSubmit={submit}>{signup&&field('Username',{value:form.username,onChange:e=>setForm({...form,username:e.target.value}),placeholder:'at least 3 characters'},attempt&&form.username.trim().length<3&&'Choose at least 3 characters')}{field('Email address',{type:'email',value:form.email,onChange:e=>setForm({...form,email:e.target.value}),placeholder:'you@example.com'},attempt&&!/\S+@\S+\.\S+/.test(form.email)&&'Enter a valid email')}{field('Password',{type:'password',value:form.password,onChange:e=>setForm({...form,password:e.target.value}),placeholder:'••••••••'},attempt&&form.password.length<1&&'Your password is required')}{signup&&<div className="checks">{checks.map(([text,yes])=><span className={yes?'pass':''} key={text}><Check size={13}/>{text}</span>)}</div>}{signup&&field('Confirm password',{type:'password',value:form.confirm,onChange:e=>setForm({...form,confirm:e.target.value}),placeholder:'Repeat password'},attempt&&form.password!==form.confirm&&'Passwords do not match')}<button className="button full">{signup?'Create account':'Log in'} <ArrowUpRight size={18}/></button></form>{!signup&&<button className="test-account" onClick={()=>{onAuth(defaultProfile);nav('/shop')}}>Use test account <span>aether@teyvat.ph / teyvat123</span></button>}<p className="switch">{signup?'Already have an account?':'New to Teyvat?'} <Link to={signup?'/login':'/signup'}>{signup?'Log in':'Create one'}</Link></p></section></main> }
+export default function AuthPage({ mode, onAuth, defaultProfile }) {
+  const [form, setForm] = useState({
+    username: "",
+    email: "",
+    password: "",
+    confirm: "",
+  });
+  const [attempt, setAttempt] = useState(false);
+  const nav = useNavigate();
+  const signup = mode === "signup";
+  const checks = [
+    ["8+ characters", form.password.length >= 8],
+    ["One uppercase letter", /[A-Z]/.test(form.password)],
+    ["One number", /\d/.test(form.password)],
+  ];
+  const valid = signup
+    ? form.username.trim().length >= 3 &&
+      /\S+@\S+\.\S+/.test(form.email) &&
+      checks.every((c) => c[1]) &&
+      form.password === form.confirm
+    : /\S+@\S+\.\S+/.test(form.email) && form.password.length > 0;
+  const submit = (e) => {
+    e.preventDefault();
+    setAttempt(true);
+    if (!valid) return;
+    onAuth(
+      signup
+        ? {
+            ...defaultProfile,
+            username: form.username,
+            email: form.email,
+            fullName: form.username,
+          }
+        : defaultProfile,
+    );
+    nav("/shop");
+  };
+  const field = (label, props, error) => (
+    <FormField label={label} error={error}>
+      <input {...props} />
+    </FormField>
+  );
+  return (
+    <main className="auth-page">
+      <div className="auth-art">
+        <div>
+          <div className="eyebrow">A quieter kind of living</div>
+          <h1>
+            Spaces that
+            <br />
+            hold your story.
+          </h1>
+          <p>
+            Join the Teyvat circle for furniture that turns the everyday into a
+            little ritual.
+          </p>
+        </div>
+        <span>TEYVAT — EST. 2024</span>
+      </div>
+      <section className="auth-card">
+        <Link className="wordmark dark" to="/">
+          TEYVAT<span>°</span>
+        </Link>
+        <div className="auth-copy">
+          <p className="eyebrow">
+            {signup ? "Create your account" : "Welcome back"}
+          </p>
+          <h2>
+            {signup ? "Start somewhere beautiful." : "So good to see you."}
+          </h2>
+        </div>
+        <form onSubmit={submit}>
+          {signup &&
+            field(
+              "Username",
+              {
+                value: form.username,
+                onChange: (e) => setForm({ ...form, username: e.target.value }),
+                placeholder: "at least 3 characters",
+              },
+              attempt &&
+                form.username.trim().length < 3 &&
+                "Choose at least 3 characters",
+            )}
+          {field(
+            "Email address",
+            {
+              type: "email",
+              value: form.email,
+              onChange: (e) => setForm({ ...form, email: e.target.value }),
+              placeholder: "you@example.com",
+            },
+            attempt &&
+              !/\S+@\S+\.\S+/.test(form.email) &&
+              "Enter a valid email",
+          )}
+          {field(
+            "Password",
+            {
+              type: "password",
+              value: form.password,
+              onChange: (e) => setForm({ ...form, password: e.target.value }),
+              placeholder: "••••••••",
+            },
+            attempt && form.password.length < 1 && "Your password is required",
+          )}
+          {signup && (
+            <div className="checks">
+              {checks.map(([text, yes]) => (
+                <span className={yes ? "pass" : ""} key={text}>
+                  <Check size={13} />
+                  {text}
+                </span>
+              ))}
+            </div>
+          )}
+          {signup &&
+            field(
+              "Confirm password",
+              {
+                type: "password",
+                value: form.confirm,
+                onChange: (e) => setForm({ ...form, confirm: e.target.value }),
+                placeholder: "Repeat password",
+              },
+              attempt &&
+                form.password !== form.confirm &&
+                "Passwords do not match",
+            )}
+          <button className="button full">
+            {signup ? "Create account" : "Log in"} <ArrowUpRight size={18} />
+          </button>
+        </form>
+        {!signup && (
+          <button
+            className="test-account"
+            onClick={() => {
+              onAuth(defaultProfile);
+              nav("/shop");
+            }}
+          >
+            Use test account <span>aether@teyvat.ph / teyvat123</span>
+          </button>
+        )}
+        <p className="switch">
+          {signup ? "Already have an account?" : "New to Teyvat?"}{" "}
+          <Link to={signup ? "/login" : "/signup"}>
+            {signup ? "Log in" : "Create one"}
+          </Link>
+        </p>
+      </section>
+    </main>
+  );
+}

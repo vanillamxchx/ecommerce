@@ -1,4 +1,76 @@
-import { Link } from 'react-router-dom'
-import { ArrowUpRight, Minus, Plus, ShoppingBag, Trash2 } from 'lucide-react'
-import { formatPHP } from '../data/products'
-export default function CartPage({ cart, change, remove }) { const total=cart.reduce((sum,item)=>sum+item.price*item.qty,0); return <main className="shell cart"><div className="page-heading"><p className="eyebrow">Your selections</p><h1>Your <i>bag.</i></h1></div>{cart.length===0?<div className="empty"><ShoppingBag/><h2>Your bag is waiting.</h2><p>Find something that makes your space feel more like you.</p><Link className="button" to="/shop">Browse the collection</Link></div>:<div className="cart-grid"><section>{cart.map(item=><article className="cart-item" key={item.id}><img src={item.image} alt=""/><div><p className="eyebrow">{item.category}</p><h3>{item.name}</h3><b>{formatPHP(item.price)}</b></div><div className="qty"><button onClick={()=>change(item.id,-1)}><Minus size={14}/></button><span>{item.qty}</span><button onClick={()=>change(item.id,1)}><Plus size={14}/></button></div><b>{formatPHP(item.price*item.qty)}</b><button className="remove" onClick={()=>remove(item.id)}><Trash2 size={17}/></button></article>)}</section><aside className="summary"><p className="eyebrow">Order summary</p><div><span>Subtotal</span><b>{formatPHP(total)}</b></div><div><span>Delivery</span><span>Calculated at checkout</span></div><hr/><div className="total"><span>Total</span><b>{formatPHP(total)}</b></div><Link className="button full" to="/checkout">Continue to checkout <ArrowUpRight size={18}/></Link><p className="fine">Free delivery within Metro Manila for orders over ₱15,000.</p></aside></div>}</main> }
+import { Link } from "react-router-dom";
+import { ArrowUpRight, Minus, Plus, ShoppingBag, Trash2 } from "lucide-react";
+import { formatPHP } from "../data/products";
+export default function CartPage({ cart, change, remove }) {
+  const total = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
+  return (
+    <main className="shell cart">
+      <div className="page-heading">
+        <p className="eyebrow">Your selections</p>
+        <h1>
+          Your <i>bag.</i>
+        </h1>
+      </div>
+      {cart.length === 0 ? (
+        <div className="empty">
+          <ShoppingBag />
+          <h2>Your bag is waiting.</h2>
+          <p>Find something that makes your space feel more like you.</p>
+          <Link className="button" to="/shop">
+            Browse the collection
+          </Link>
+        </div>
+      ) : (
+        <div className="cart-grid">
+          <section>
+            {cart.map((item) => (
+              <article className="cart-item" key={item.id}>
+                <img src={item.image} alt="" />
+                <div>
+                  <p className="eyebrow">{item.category}</p>
+                  <h3>{item.name}</h3>
+                  <b>{formatPHP(item.price)}</b>
+                </div>
+                <div className="qty">
+                  <button onClick={() => change(item.id, -1)}>
+                    <Minus size={14} />
+                  </button>
+                  <span>{item.qty}</span>
+                  <button onClick={() => change(item.id, 1)}>
+                    <Plus size={14} />
+                  </button>
+                </div>
+                <b>{formatPHP(item.price * item.qty)}</b>
+                <button className="remove" onClick={() => remove(item.id)}>
+                  <Trash2 size={17} />
+                </button>
+              </article>
+            ))}
+          </section>
+          <aside className="summary">
+            <p className="eyebrow">Order summary</p>
+            <div>
+              <span>Subtotal</span>
+              <b>{formatPHP(total)}</b>
+            </div>
+            <div>
+              <span>Delivery</span>
+              <span>Calculated at checkout</span>
+            </div>
+            <hr />
+            <div className="total">
+              <span>Total</span>
+              <b>{formatPHP(total)}</b>
+            </div>
+            <Link className="button full" to="/checkout">
+              Continue to checkout <ArrowUpRight size={18} />
+            </Link>
+            <p className="fine">
+              Free delivery within Metro Manila for orders over ₱15,000.
+            </p>
+          </aside>
+        </div>
+      )}
+    </main>
+  );
+}
